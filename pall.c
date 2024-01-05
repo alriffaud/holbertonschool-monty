@@ -16,7 +16,7 @@ void pall(stack_t **h, unsigned int a)
 		return;
 	while (current != NULL)
 	{
-		fprintf(stderr, "%d\n", current->n);
+		printf("%d\n", current->n);
 		current = current->next;
 	}
 }
