@@ -10,6 +10,7 @@
 
 void nop(stack_t **h, unsigned int a)
 {
-	(void) *h;
+	if (*h == NULL)
+		return;
 	(void) a;
 }
