@@ -1,32 +1,50 @@
 #include "monty.h"
 
 /**
- * num_of_lines - This function returns the number of lines in a file.
- * @str: It's the pointer to the file.
+ * process_line - This function processes each line in a file.
+ * @opcodes: It's the array of opcodes.
+ * @s: It's a pointer to the stack.
+ * @line: It's a pointer to the line.
+ * @fp: It's a pointer to the file.
+ * @line_count: It's the number of the line.
  *
- * Return: An integer representing the number of lines or NULL if there is
- * any error.
+ * Return: None.
  */
-int num_of_lines(FILE *str)
+void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
+		unsigned int line_count)
 {
-	int count = 0;
-	char c;
+	char *token = strtok(line, " ");
+	int i;
 
-	if (str == NULL)
+	while (token != NULL && strcmp(token, "$") != 0)
 	{
-		return (0);
-	}
-
-	while ((c = fgetc(str)) != EOF)
-	{
-		if (c == '\n')
+		token[strcspn(token, "$")] = '\0';
+		i = 0;
+		while (opcodes[i].opcode != NULL && strcmp(token, opcodes[i].opcode) != 0)
+			i++;
+		if (opcodes[i].opcode != NULL)
 		{
-			count++;
-		}
-	}
-	return (count);
+			token = strtok(NULL, " ");
+			if (token != NULL)
+				token[strcspn(token, "$")] = '\0';
+			if (strcmp(opcodes[i].opcode, "push") == 0 && atoi(token) == 0
+				&& strcmp(token, "0") != 0)
+			{
+				printf("L%d: usage: push integer\n", line_count);
+				fclose(fp), free_stack(*s);
+				exit(EXIT_FAILURE);
+			}
+			else if (token != NULL)
+				opcodes[i].f(s, atoi(token));
+			else
+				if (strcmp(opcodes[i].opcode, "push") != 0)
+					opcodes[i].f(s, line_count); }
+		else
+		{
+			printf("L%d: unknown instruction %s\n", line_count, token);
+			fclose(fp), free_stack(*s), exit(EXIT_FAILURE); }
+		token = strtok(NULL, " "); }
 }
-
 
 /**
  * main - This program implements the opcodes functions from a monty file.
@@ -38,9 +56,9 @@ int num_of_lines(FILE *str)
 int main(int argc, char *argv[])
 {
 	instruction_t opcodes[] = {{"push", push}, {"pall", pall}, {NULL, NULL}};
+	unsigned int line_count;
 	FILE *fp;
-	unsigned int i, j;
-	char line[256], *token;
+	char line[256];
 	stack_t *s = NULL;
 
 	if (argc != 2)
@@ -48,31 +66,11 @@ int main(int argc, char *argv[])
 	fp = fopen(argv[1], "r");
 	if (fp == NULL)
 		printf("Error: Can't open file %s\n", argv[1]), exit(EXIT_FAILURE);
-	for (j = 1; fgets(line, sizeof(line), fp) != NULL; j++)
+	for (line_count = 1; fgets(line, sizeof(line), fp) != NULL; line_count++)
 	{
 		line[strcspn(line, "\n")] = '\0';
-		token = strtok(line, " ");
-		if (strcmp(token, "$") == 0)
-			break;
-		while (token != NULL)
-		{
-			token[strcspn(token, "$")] = '\0';
-			i = 0;
-			while (opcodes[i].opcode != NULL && strcmp(token, opcodes[i].opcode) != 0)
-				i++;
-			if (opcodes[i].opcode != NULL)
-			{
-				token = strtok(NULL, " ");
-				/*if (strcmp(token, "$") == 0) break;*/
-				if (token != NULL)
-					token[strcspn(token, "$")] = '\0', opcodes[i].f(&s, atoi(token));
-				else
-					opcodes[i].f(&s, j); }
-			else
-			{
-				printf("L%d: unknown instruction %s\n", j, token);
-				free_stack(s), exit(EXIT_FAILURE); }
-			token = strtok(NULL, " "); } }
+		process_line(opcodes, &s, line, fp, line_count);
+	}
 	fclose(fp), free_stack(s);
 	return (0);
 }

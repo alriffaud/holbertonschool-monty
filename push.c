@@ -13,7 +13,6 @@ void push(stack_t **head, unsigned int n)
 
 	if (new_node == NULL)
 		return;
-
 	new_node->n = n;
 	new_node->prev = NULL;
 	new_node->next = *head;
