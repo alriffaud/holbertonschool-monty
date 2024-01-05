@@ -24,7 +24,7 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
 			i++;
 		if (opcodes[i].opcode != NULL)
 		{
-			if (strcmp(opcodes[i].opcode, "pall") != 0)
+			/*if (strcmp(opcodes[i].opcode, "pall") != 0)*/
 				token = strtok(NULL, " ");
 			if (token != NULL)
 				token[strcspn(token, "$")] = '\0';
