@@ -24,13 +24,14 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
 			i++;
 		if (opcodes[i].opcode != NULL)
 		{
-			token = strtok(NULL, " ");
+			if (strcmp(opcodes[i].opcode, "pall") != 0)
+				token = strtok(NULL, " ");
 			if (token != NULL)
 				token[strcspn(token, "$")] = '\0';
 			if (strcmp(opcodes[i].opcode, "push") == 0 && atoi(token) == 0
 				&& strcmp(token, "0") != 0)
 			{
-				printf("L%d: usage: push integer\n", line_count);
+				fprintf(stderr, "L%d: usage: push integer\n", line_count);
 				fclose(fp), free_stack(*s);
 				exit(EXIT_FAILURE);
 			}
@@ -41,7 +42,7 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
 					opcodes[i].f(s, line_count); }
 		else
 		{
-			printf("L%d: unknown instruction %s\n", line_count, token);
+			fprintf(stderr, "L%d: unknown instruction %s\n", line_count, token);
 			fclose(fp), free_stack(*s), exit(EXIT_FAILURE); }
 		token = strtok(NULL, " "); }
 }
@@ -62,10 +63,10 @@ int main(int argc, char *argv[])
 	stack_t *s = NULL;
 
 	if (argc != 2)
-		printf("USAGE: monty file\n"), exit(EXIT_FAILURE);
+		fprintf(stderr, "USAGE: monty file\n"), exit(EXIT_FAILURE);
 	fp = fopen(argv[1], "r");
 	if (fp == NULL)
-		printf("Error: Can't open file %s\n", argv[1]), exit(EXIT_FAILURE);
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]), exit(EXIT_FAILURE);
 	for (line_count = 1; fgets(line, sizeof(line), fp) != NULL; line_count++)
 	{
 		line[strcspn(line, "\n")] = '\0';
