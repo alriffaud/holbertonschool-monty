@@ -55,7 +55,7 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp)
 int main(int argc, char *argv[])
 {
 	instruction_t opcodes[] = {{"push", push}, {"pall", pall}, {"pint", pint},
-		{"pop", pop}, {NULL, NULL}};
+		{"pop", pop}, {"nop", nop}, {NULL, NULL}};
 	FILE *fp;
 	char line[256];
 	stack_t *s = NULL;
