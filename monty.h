@@ -46,7 +46,8 @@ typedef struct instruction_s
 /* Functions */
 void free_stack(stack_t *head);
 void push(stack_t **head, unsigned int n);
-void pall(stack_t **h, unsigned int n);
+void pall(stack_t **h, unsigned int a);
+void pint(stack_t **h, unsigned int a);
 
 
 #endif
