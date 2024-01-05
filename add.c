@@ -21,9 +21,9 @@ void add(stack_t **h, unsigned int a)
 		exit(EXIT_FAILURE);
 	}
 
-	sum = curren->n + current->next->n;
+	sum = current->n + current->next->n;
 	current->next->n = sum;
 
-	pop(*h, line_count);
+	pop(h, line_count);
 
 }
