@@ -8,6 +8,9 @@
 #include <string.h>
 
 
+/* Global variables*/
+unsigned int line_count;
+
 /* Structures */
 
 /**

@@ -1,17 +1,16 @@
 #include "monty.h"
 
+
 /**
  * process_line - This function processes each line in a file.
  * @opcodes: It's the array of opcodes.
  * @s: It's a pointer to the stack.
  * @line: It's a pointer to the line.
  * @fp: It's a pointer to the file.
- * @line_count: It's the number of the line.
  *
  * Return: None.
  */
-void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
-		unsigned int line_count)
+void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp)
 {
 	char *token = strtok(line, " ");
 	int i;
@@ -24,8 +23,7 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
 			i++;
 		if (opcodes[i].opcode != NULL)
 		{
-			/*if (strcmp(opcodes[i].opcode, "pall") != 0)*/
-				token = strtok(NULL, " ");
+			token = strtok(NULL, " ");
 			if (token != NULL)
 				token[strcspn(token, "$")] = '\0';
 			if (strcmp(opcodes[i].opcode, "push") == 0 && atoi(token) == 0
@@ -57,10 +55,10 @@ void process_line(instruction_t opcodes[], stack_t **s, char *line, FILE *fp,
 int main(int argc, char *argv[])
 {
 	instruction_t opcodes[] = {{"push", push}, {"pall", pall}, {NULL, NULL}};
-	unsigned int line_count;
 	FILE *fp;
 	char line[256];
 	stack_t *s = NULL;
+	/*unsigned int line_count;*/
 
 	if (argc != 2)
 		fprintf(stderr, "USAGE: monty file\n"), exit(EXIT_FAILURE);
@@ -70,8 +68,9 @@ int main(int argc, char *argv[])
 	for (line_count = 1; fgets(line, sizeof(line), fp) != NULL; line_count++)
 	{
 		line[strcspn(line, "\n")] = '\0';
-		process_line(opcodes, &s, line, fp, line_count);
+		process_line(opcodes, &s, line, fp);
 	}
-	fclose(fp), free_stack(s);
+	fclose(fp);
+	free_stack(s);
 	return (0);
 }
