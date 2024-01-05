@@ -12,7 +12,7 @@ void pop(stack_t **h, unsigned int a)
 {
 	stack_t *current = *h;
 
-	void(a);
+	(void) a;
 
 	if (*h == NULL)
 	{
