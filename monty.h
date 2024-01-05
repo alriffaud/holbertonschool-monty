@@ -49,6 +49,6 @@ void push(stack_t **head, unsigned int n);
 void pall(stack_t **h, unsigned int a);
 void pint(stack_t **h, unsigned int a);
 void pop(stack_t **h, unsigned int a);
-void nop(stack_t *h, unsigned int a);
+void nop(stack_t **h, unsigned int a);
 
 #endif
